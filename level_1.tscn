@@ -1,0 +1,93 @@
+[gd_scene load_steps=10 format=3 uid="uid://cuheobmmv0lm"]
+
+[ext_resource type="Texture2D" uid="uid://bkck7un2dc7ou" path="res://assets/purple.png" id="1_ss0ob"]
+[ext_resource type="Script" path="res://level.gd" id="1_we5ka"]
+[ext_resource type="PackedScene" uid="uid://ck1gstywqpk3o" path="res://ufo.tscn" id="2_um3k4"]
+[ext_resource type="Script" path="res://ufo.gd" id="4_bknyg"]
+[ext_resource type="PackedScene" uid="uid://ctrmecheo47n2" path="res://maze.tscn" id="5_rodli"]
+[ext_resource type="AudioStream" uid="uid://bfmwbkfpxl6bj" path="res://assets/mixkit-retro-game-notification-212.wav" id="6_jc4g4"]
+[ext_resource type="PackedScene" uid="uid://c4uiec4fl1ho" path="res://finish_zone.tscn" id="7_kaxnk"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_5b6l2"]
+font_size = 50
+
+[sub_resource type="LabelSettings" id="LabelSettings_y1yqf"]
+font_size = 40
+
+[node name="Level1" type="Node2D"]
+script = ExtResource("1_we5ka")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+layer = -1
+follow_viewport_enabled = true
+follow_viewport_scale = 0.5
+
+[node name="Background" type="TextureRect" parent="CanvasLayer"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -4332.0
+offset_top = -4692.0
+offset_right = 5668.0
+offset_bottom = 5308.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_ss0ob")
+stretch_mode = 1
+
+[node name="UFO" parent="." instance=ExtResource("2_um3k4")]
+position = Vector2(286, 249)
+mass = 0.1
+script = ExtResource("4_bknyg")
+input_force = 50.0
+max_velocity_sq = 100000.0
+
+[node name="Maze" parent="." instance=ExtResource("5_rodli")]
+z_index = -50
+scale = Vector2(1.5, 1.5)
+
+[node name="Start" type="Label" parent="."]
+z_index = -10
+offset_left = 215.0
+offset_top = 166.0
+offset_right = 363.0
+offset_bottom = 238.0
+scale = Vector2(0.475755, 0.475755)
+text = "START"
+label_settings = SubResource("LabelSettings_5b6l2")
+
+[node name="Finish" type="Label" parent="."]
+z_index = -10
+offset_left = 590.0
+offset_top = 163.0
+offset_right = 738.0
+offset_bottom = 235.0
+scale = Vector2(0.475755, 0.475755)
+text = "FINISH"
+label_settings = SubResource("LabelSettings_5b6l2")
+
+[node name="Tutorial" type="Label" parent="."]
+z_index = -10
+offset_left = 355.0
+offset_top = 55.0
+offset_right = 684.0
+offset_bottom = 343.0
+scale = Vector2(0.475755, 0.475755)
+text = "Move: WASD, Arrows
+Reach the FINISH
+Avoid walls
+"
+label_settings = SubResource("LabelSettings_y1yqf")
+horizontal_alignment = 1
+
+[node name="FinishSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("6_jc4g4")
+
+[node name="FinishZone" parent="." instance=ExtResource("7_kaxnk")]
+position = Vector2(632, 215)
+scale = Vector2(9.63059, 12.8028)
+
+[connection signal="body_exited" from="Maze" to="." method="_on_maze_body_exited"]
+[connection signal="body_entered" from="FinishZone" to="." method="_on_finish_zone_body_entered"]
